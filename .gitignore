@@ -16,3 +16,7 @@ build/
 *.node
 
 .DS_Store
+node_modules/
+cpp_engine/build/
+.env
+dist/
