@@ -1,45 +1,53 @@
 // frontend/src/pages/BacktestPage.tsx
-import { useState, FormEvent } from 'react'
-import client from '../api/client'
+import { useState, FormEvent, useMemo } from 'react'
+import { client } from '../api/client'
 
-const DATASETS = ['stocks_april','2024_only','2024_2025']
-const STRATEGIES = [
-  'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-  'Pairs_MSFT_NVDA','Pairs_NVDA_GOOG','Pairs_MSFT_GOOG',
-  'Pairs_BTC_ETH','Pairs_ETH_SOL','Pairs_BTC_SOL','Pairs_ETH_ADA','Pairs_SOL_ADA',
-  'LeadLag_MSFT->NVDA','LeadLag_NVDA->MSFT',
-  'LeadLag_BTC->ETH','LeadLag_ETH->BTC','LeadLag_ETH->SOL','LeadLag_SOL->ETH'
-]
+const STRATEGIES_BY_DATASET: Record<string,string[]> = {
+  stocks_april: [
+    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
+    'Pairs_MSFT_NVDA','Pairs_NVDA_GOOG','Pairs_MSFT_GOOG',
+    'LeadLag_MSFT->NVDA','LeadLag_NVDA->MSFT'
+  ],
+  '2024_only': [
+    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
+    'Pairs_BTC_ETH','Pairs_ETH_SOL','Pairs_BTC_SOL','Pairs_ETH_ADA','Pairs_SOL_ADA',
+    'LeadLag_BTC->ETH','LeadLag_ETH->BTC','LeadLag_ETH->SOL','LeadLag_SOL->ETH'
+  ],
+  '2024_2025': [
+    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
+    'Pairs_BTC_ETH','Pairs_ETH_SOL','Pairs_BTC_SOL','Pairs_ETH_ADA','Pairs_SOL_ADA',
+    'LeadLag_BTC->ETH','LeadLag_ETH->BTC','LeadLag_ETH->SOL','LeadLag_SOL->ETH'
+  ],
+}
 
 export default function BacktestPage() {
-  const [dataset, setDataset]     = useState(DATASETS[0])
-  const [strategy, setStrategy]   = useState(STRATEGIES[0])
-  const [cash, setCash]           = useState(100000)
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState<string|null>(null)
-  const [rawErrorOutput, setRawErrorOutput] = useState<string|null>(null)
-  const [results, setResults]     = useState<any[]>([])
+  const [dataset, setDataset]   = useState('stocks_april')
+  const [strategy, setStrategy] = useState(STRATEGIES_BY_DATASET['stocks_april'][0])
+  const [cash, setCash]         = useState(100000)
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState<string|null>(null)
+  const [results, setResults]   = useState<any[]>([])
+
+  // whenever dataset changes, reset strategy to first in that list
+  useMemo(() => {
+    setStrategy(STRATEGIES_BY_DATASET[dataset][0])
+  }, [dataset])
 
   const handleRun = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    setRawErrorOutput(null)
-    setResults([])
-
     try {
       const res = await client.get<any[]>('/backtest/run', {
-        params: { dataset, strategy, cash },
+        params: { dataset, strategy, cash }
       })
-      setResults(res.data)
       if (res.data.length === 0) {
         setError('No results returned. Check your parameters or data directory.')
+      } else {
+        setResults(res.data)
       }
     } catch (err: any) {
-      // Axios error shape
-      const msg = err.response?.data?.error || err.message
-      setError(msg)
-      setRawErrorOutput(err.response?.data?.rawOutput || null)
+      setError(err.response?.data?.error || err.message)
     } finally {
       setLoading(false)
     }
@@ -48,76 +56,56 @@ export default function BacktestPage() {
   return (
     <div style={{ padding: 20 }}>
       <h2>Run a Backtest</h2>
-      <form onSubmit={handleRun} style={{ marginBottom: 20 }}>
+      <form onSubmit={handleRun}>
         <label>
           Dataset:{' '}
-          <select
-            value={dataset}
-            onChange={e => setDataset(e.target.value)}
-          >
-            {DATASETS.map(d => (
-              <option key={d} value={d}>{d}</option>
+          <select value={dataset} onChange={e => setDataset(e.target.value)}>
+            {Object.keys(STRATEGIES_BY_DATASET).map(ds => (
+              <option key={ds} value={ds}>{ds}</option>
             ))}
           </select>
-        </label>{' '}
-        <label>
+        </label>
+
+        <label style={{ marginLeft: 10 }}>
           Strategy:{' '}
-          <select
-            value={strategy}
-            onChange={e => setStrategy(e.target.value)}
-          >
-            {STRATEGIES.map(s => (
+          <select value={strategy} onChange={e => setStrategy(e.target.value)}>
+            {STRATEGIES_BY_DATASET[dataset].map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
-        </label>{' '}
-        <label>
+        </label>
+
+        <label style={{ marginLeft: 10 }}>
           Cash:{' '}
           <input
             type="number"
             value={cash}
             onChange={e => setCash(Number(e.target.value))}
-            min={0}
           />
-        </label>{' '}
-        <button type="submit" disabled={loading}>
+        </label>
+
+        <button type="submit" disabled={loading} style={{ marginLeft: 10 }}>
           {loading ? 'Running…' : 'Run Backtest'}
         </button>
       </form>
 
-      {error && (
-        <div style={{ color: 'red', marginBottom: 20 }}>
-          <p><strong>Error:</strong> {error}</p>
-          {rawErrorOutput && (
-            <pre style={{ background: '#f5f5f5', padding: 10 }}>
-              {rawErrorOutput}
-            </pre>
-          )}
-        </div>
-      )}
+      {error && <p style={{ color: 'red' }}>{`Error: ${error}`}</p>}
 
-      {!loading && results.length > 0 && (
-        <div>
-          <h3>Results</h3>
-          <table border={1} cellPadding={5} style={{ borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                {Object.keys(results[0]).map(key => (
-                  <th key={key}>{key.replace(/_/g, ' ')}</th>
-                ))}
+      {results.length > 0 && (
+        <table border={1} cellPadding={5} style={{ marginTop: 20 }}>
+          <thead>
+            <tr>
+              {Object.keys(results[0]).map(k => <th key={k}>{k}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {results.map((row, i) => (
+              <tr key={i}>
+                {Object.values(row).map((v, j) => <td key={j}>{String(v)}</td>)}
               </tr>
-            </thead>
-            <tbody>
-              {results.map((row, i) => (
-                <tr key={i}>
-                  {Object.values(row).map((val, j) => (
-                    <td key={j}>{typeof val === 'number' ? val.toFixed(4) : String(val)}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   )

@@ -1,9 +1,11 @@
 // frontend/src/api/client.ts
-import axios from 'axios'
+import axios from 'axios';
 
-export const client = axios.create({
+const client = axios.create({
+  // in dev a Vite proxy rewrites “/api” → http://localhost:8000
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  // …any other defaults…
-})
+  withCredentials: true            // cookies if you ever use them
+});
 
-export default client
+export default client;   // <‑‑ default
+export { client };       // <‑‑ named (so either import style works)

@@ -7,7 +7,7 @@ import React, {
     ReactNode,
     useEffect,
   } from 'react'
-  import client from '../api/client'
+  import { client } from '../api/client'
   import * as authService from '../services/authService'
   import * as userService from '../services/userService'
   
