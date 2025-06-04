@@ -3,7 +3,7 @@
     {
       "target_name": "financialAddon",
       "sources": [
-        "src/addon.cpp",
+        "addon.cpp",
         "../cpp_engine/src/Portfolio.cpp",
         "../cpp_engine/src/DataManager.cpp",
         "../cpp_engine/src/PortfolioManager.cpp"

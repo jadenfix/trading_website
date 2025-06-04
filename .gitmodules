@@ -1,3 +1,0 @@
-[submodule "cpp_engine"]
-	path = cpp_engine
-	url = https://github.com/jadenfix/financial_cpp.git
