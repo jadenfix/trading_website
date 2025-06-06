@@ -4,106 +4,152 @@ import './DashboardPage.css'
 
 export default function DashboardPage() {
   const quickStats = [
-    { label: 'Total Strategies', value: '12', change: '+2', icon: '📊' },
-    { label: 'Active Backtests', value: '3', change: '+1', icon: '⚡' },
-    { label: 'Portfolio Value', value: '$125,430', change: '+5.2%', icon: '💰' },
-    { label: 'Win Rate', value: '68%', change: '+3%', icon: '🎯' },
+    { label: 'Assets Under Management', value: '$2.4B', change: '+12.3%', trend: 'up', icon: 'portfolio' },
+    { label: 'Active Strategies', value: '47', change: '+8', trend: 'up', icon: 'strategies' },
+    { label: 'Alpha Generation', value: '23.7%', change: '+4.2%', trend: 'up', icon: 'alpha' },
+    { label: 'Sharpe Ratio', value: '2.84', change: '+0.3', trend: 'up', icon: 'risk' },
   ]
 
   const quickActions = [
     { 
-      title: 'Run New Backtest', 
-      description: 'Test your trading strategies against historical data',
-      icon: '📈',
+      title: 'Strategy Backtesting', 
+      description: 'High-performance quantitative analysis and risk assessment',
       link: '/backtest',
-      color: 'blue'
+      gradient: 'blue',
+      icon: 'analytics'
     },
     { 
-      title: 'Research Market', 
-      description: 'AI-powered market analysis and news insights',
-      icon: '🔍',
+      title: 'Market Intelligence', 
+      description: 'AI-driven market analysis and predictive modeling',
       link: '/research',
-      color: 'green'
+      gradient: 'green',
+      icon: 'intelligence'
     },
     { 
-      title: 'Join Community', 
-      description: 'Collaborate with other traders and share strategies',
-      icon: '👥',
+      title: 'Institutional Network', 
+      description: 'Connect with elite portfolio managers and analysts',
       link: '/collaborate',
-      color: 'purple'
+      gradient: 'purple',
+      icon: 'network'
     },
     { 
-      title: 'Generate Code', 
-      description: 'Auto-generate trading algorithms and boilerplate',
-      icon: '⚡',
+      title: 'Algorithm Development', 
+      description: 'Advanced quantitative model generation and optimization',
       link: '/codegen',
-      color: 'orange'
+      gradient: 'gold',
+      icon: 'development'
     },
+  ]
+
+  const recentActivity = [
+    {
+      type: 'execution',
+      title: 'Long/Short Equity Strategy Deployment',
+      description: 'Successfully deployed $150M in high-conviction positions',
+      time: '2 hours ago',
+      result: '+2.4%',
+      status: 'success'
+    },
+    {
+      type: 'analysis',
+      title: 'Volatility Arbitrage Model Update',
+      description: 'Enhanced VIX surface analysis with ML optimization',
+      time: '4 hours ago',
+      result: 'Completed',
+      status: 'completed'
+    },
+    {
+      type: 'risk',
+      title: 'Portfolio Risk Assessment',
+      description: 'Comprehensive stress testing across all positions',
+      time: '6 hours ago',
+      result: 'VAR: -1.2%',
+      status: 'completed'
+    },
+    {
+      type: 'research',
+      title: 'Sector Rotation Analysis',
+      description: 'Identified emerging opportunities in technology sector',
+      time: '1 day ago',
+      result: 'High Conviction',
+      status: 'actionable'
+    }
   ]
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Trading Dashboard</h1>
-        <p>Welcome back! Here's what's happening with your trading today.</p>
+        <div className="header-content">
+          <h1>Portfolio Command Center</h1>
+          <p className="header-subtitle">Real-time institutional-grade analytics and execution platform</p>
+        </div>
+        <div className="header-metrics">
+          <div className="live-indicator">
+            <div className="pulse"></div>
+            <span>LIVE MARKET DATA</span>
+          </div>
+        </div>
       </div>
 
       <div className="stats-grid">
         {quickStats.map((stat, index) => (
           <div key={index} className="stat-card">
-            <div className="stat-icon">{stat.icon}</div>
+            <div className="stat-header">
+              <div className={`stat-icon icon-${stat.icon}`}></div>
+              <div className={`stat-trend trend-${stat.trend}`}>
+                <span className="trend-arrow"></span>
+                <span className="trend-value">{stat.change}</span>
+              </div>
+            </div>
             <div className="stat-content">
               <div className="stat-value">{stat.value}</div>
               <div className="stat-label">{stat.label}</div>
-              <div className="stat-change positive">{stat.change}</div>
             </div>
           </div>
         ))}
       </div>
 
       <div className="actions-section">
-        <h2>Quick Actions</h2>
+        <h2>Strategic Operations</h2>
         <div className="actions-grid">
           {quickActions.map((action, index) => (
-            <Link key={index} to={action.link} className={`action-card ${action.color}`}>
-              <div className="action-icon">{action.icon}</div>
+            <Link key={index} to={action.link} className={`action-card gradient-${action.gradient}`}>
+              <div className="action-background"></div>
+              <div className={`action-icon icon-${action.icon}`}></div>
               <div className="action-content">
                 <h3>{action.title}</h3>
                 <p>{action.description}</p>
               </div>
-              <div className="action-arrow">→</div>
+              <div className="action-arrow">
+                <div className="arrow-line"></div>
+                <div className="arrow-head"></div>
+              </div>
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="recent-activity">
-        <h2>Recent Activity</h2>
-        <div className="activity-list">
-          <div className="activity-item">
-            <div className="activity-icon">📊</div>
-            <div className="activity-content">
-              <div className="activity-title">MAC_5_20 Backtest Completed</div>
-              <div className="activity-time">2 hours ago</div>
+      <div className="activity-section">
+        <h2>Market Operations Log</h2>
+        <div className="activity-container">
+          {recentActivity.map((activity, index) => (
+            <div key={index} className="activity-item">
+              <div className="activity-timeline">
+                <div className={`timeline-dot dot-${activity.type}`}></div>
+                <div className="timeline-line"></div>
+              </div>
+              <div className="activity-content">
+                <div className="activity-header">
+                  <h4>{activity.title}</h4>
+                  <div className="activity-meta">
+                    <span className="activity-time">{activity.time}</span>
+                    <span className={`activity-status status-${activity.status}`}>{activity.result}</span>
+                  </div>
+                </div>
+                <p className="activity-description">{activity.description}</p>
+              </div>
             </div>
-            <div className="activity-result positive">+12.4%</div>
-          </div>
-          <div className="activity-item">
-            <div className="activity-icon">🔍</div>
-            <div className="activity-content">
-              <div className="activity-title">Market Research: NVDA Analysis</div>
-              <div className="activity-time">4 hours ago</div>
-            </div>
-            <div className="activity-result">Completed</div>
-          </div>
-          <div className="activity-item">
-            <div className="activity-icon">⚡</div>
-            <div className="activity-content">
-              <div className="activity-title">Generated Momentum Strategy</div>
-              <div className="activity-time">Yesterday</div>
-            </div>
-            <div className="activity-result">Ready</div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
