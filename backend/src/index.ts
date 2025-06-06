@@ -22,7 +22,11 @@ console.log(
 
 async function main() {
   // 1️⃣ Connect to the database (or stub)
-  await connectToDatabase()
+  try {
+    await connectToDatabase()
+  } catch (err) {
+    console.log('⚠️  Continuing without database connection')
+  }
 
   // 2️⃣ Create the Express app
   const app = express()
