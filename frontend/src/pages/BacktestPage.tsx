@@ -49,6 +49,19 @@ export default function BacktestPage() {
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState<string|null>(null)
   const [results, setResults]   = useState<any[]>([])
+  
+  // ML Prediction state
+  const [mlLoading, setMlLoading] = useState(false)
+  const [mlError, setMlError] = useState<string|null>(null)
+  const [mlPrediction, setMlPrediction] = useState<any>(null)
+  const [marketData, setMarketData] = useState({
+    open: 50000,
+    high: 51000,
+    low: 49500,
+    close: 50500,
+    volume: 1000000,
+    asset: 'btc'
+  })
 
   // whenever dataset changes, reset strategy to first in that list
   useMemo(() => {
@@ -72,6 +85,19 @@ export default function BacktestPage() {
       setError(err.response?.data?.error || err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleMLPredict = async () => {
+    setMlLoading(true)
+    setMlError(null)
+    try {
+      const res = await client.post('/backtest/predict', marketData)
+      setMlPrediction(res.data)
+    } catch (err: any) {
+      setMlError(err.response?.data?.error || err.message)
+    } finally {
+      setMlLoading(false)
     }
   }
 
@@ -175,6 +201,177 @@ export default function BacktestPage() {
             )}
           </button>
         </form>
+      </div>
+
+      {/* ML Prediction Section */}
+      <div className="ml-prediction-container">
+        <h2>🧠 Bayesian ML Prediction Engine</h2>
+        <p>Get real-time predictions using our advanced Bayesian machine learning models</p>
+        
+        <div className="ml-form">
+          <div className="market-data-inputs">
+            <div className="input-row">
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">Asset</span>
+                  <select 
+                    value={marketData.asset} 
+                    onChange={e => setMarketData({...marketData, asset: e.target.value})}
+                    className="form-select"
+                  >
+                    <option value="btc">Bitcoin (BTC)</option>
+                    <option value="eth">Ethereum (ETH)</option>
+                    <option value="sol">Solana (SOL)</option>
+                    <option value="ada">Cardano (ADA)</option>
+                  </select>
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">Open</span>
+                  <input
+                    type="number"
+                    value={marketData.open}
+                    onChange={e => setMarketData({...marketData, open: Number(e.target.value)})}
+                    className="form-input"
+                    step="0.01"
+                  />
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">High</span>
+                  <input
+                    type="number"
+                    value={marketData.high}
+                    onChange={e => setMarketData({...marketData, high: Number(e.target.value)})}
+                    className="form-input"
+                    step="0.01"
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="input-row">
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">Low</span>
+                  <input
+                    type="number"
+                    value={marketData.low}
+                    onChange={e => setMarketData({...marketData, low: Number(e.target.value)})}
+                    className="form-input"
+                    step="0.01"
+                  />
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">Close</span>
+                  <input
+                    type="number"
+                    value={marketData.close}
+                    onChange={e => setMarketData({...marketData, close: Number(e.target.value)})}
+                    className="form-input"
+                    step="0.01"
+                  />
+                </label>
+              </div>
+              <div className="form-group">
+                <label className="form-label">
+                  <span className="label-text">Volume</span>
+                  <input
+                    type="number"
+                    value={marketData.volume}
+                    onChange={e => setMarketData({...marketData, volume: Number(e.target.value)})}
+                    className="form-input"
+                    step="1000"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={handleMLPredict}
+            disabled={mlLoading} 
+            className={`ml-predict-button ${mlLoading ? 'loading' : ''}`}
+          >
+            {mlLoading ? (
+              <>
+                <span className="spinner"></span>
+                Analyzing...
+              </>
+            ) : (
+              <>
+                <span>🔮</span>
+                Get ML Prediction
+              </>
+            )}
+          </button>
+        </div>
+
+        {mlError && (
+          <div className="error-container">
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              <span>{mlError}</span>
+            </div>
+          </div>
+        )}
+
+        {mlPrediction && (
+          <div className="ml-results">
+            <h3>Prediction Results</h3>
+            <div className="prediction-cards">
+              <div className={`prediction-card signal-${mlPrediction.ml_prediction.signal.toLowerCase()}`}>
+                <div className="card-header">
+                  <span className="card-icon">
+                    {mlPrediction.ml_prediction.signal === 'BUY' ? '📈' : 
+                     mlPrediction.ml_prediction.signal === 'SELL' ? '📉' : '⏸️'}
+                  </span>
+                  <span className="card-title">Signal</span>
+                </div>
+                <div className="card-value">{mlPrediction.ml_prediction.signal}</div>
+              </div>
+              
+              <div className="prediction-card">
+                <div className="card-header">
+                  <span className="card-icon">🎯</span>
+                  <span className="card-title">Prediction</span>
+                </div>
+                <div className="card-value">
+                  {(mlPrediction.ml_prediction.prediction * 100).toFixed(3)}%
+                </div>
+              </div>
+              
+              <div className="prediction-card">
+                <div className="card-header">
+                  <span className="card-icon">🎲</span>
+                  <span className="card-title">Uncertainty</span>
+                </div>
+                <div className="card-value">
+                  {(mlPrediction.ml_prediction.uncertainty * 100).toFixed(2)}%
+                </div>
+              </div>
+              
+              <div className="prediction-card">
+                <div className="card-header">
+                  <span className="card-icon">✨</span>
+                  <span className="card-title">Confidence</span>
+                </div>
+                <div className="card-value">
+                  {(mlPrediction.ml_prediction.confidence * 100).toFixed(1)}%
+                </div>
+              </div>
+            </div>
+            
+            <div className="prediction-details">
+              <p><strong>Asset:</strong> {mlPrediction.asset.toUpperCase()}</p>
+              <p><strong>Timestamp:</strong> {new Date(mlPrediction.timestamp).toLocaleString()}</p>
+              <p><strong>Market Data:</strong> O: {mlPrediction.market_data.open} | H: {mlPrediction.market_data.high} | L: {mlPrediction.market_data.low} | C: {mlPrediction.market_data.close}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {error && (

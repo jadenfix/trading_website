@@ -1,5 +1,5 @@
 #include <napi.h>
-#include "../cpp_engine/src/Portfolio.h"
+#include "../cpp_engine/include/Portfolio.h"
 
 // Wrap Portfolio::get_results_summary() → JS object
 Napi::Object GetPortfolioResults(const Napi::CallbackInfo& info) {
@@ -10,7 +10,7 @@ Napi::Object GetPortfolioResults(const Napi::CallbackInfo& info) {
 
   // 2) Build a Portfolio and—**in a real use case**—feed it market events here.
   Portfolio p(initialCash);
-  // TODO: in production, you’d call p.handle_fill_event(...) etc. from data.
+  // TODO: in production, you'd call p.handle_fill_event(...) etc. from data.
 
   // 3) Get the results struct
   StrategyResult res = p.get_results_summary();
