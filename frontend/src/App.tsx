@@ -6,6 +6,7 @@ import Navigation from './components/Navigation'
 import DashboardPage from './pages/DashboardPage'
 import ResearchPage from './pages/ResearchPage'
 import BacktestPage from './pages/BacktestPage'
+import CSVBacktestPage from './pages/CSVBacktestPage'
 import CollaboratePage from './pages/CollaboratePage'
 import CodeGenPage from './pages/CodeGenPage'
 import LoginPage from './pages/LoginPage'
@@ -41,6 +42,11 @@ export default function App() {
               <Route path="/backtest" element={
                 <PrivateRoute>
                   <BacktestPage />
+                </PrivateRoute>
+              } />
+              <Route path="/csv-backtest" element={
+                <PrivateRoute>
+                  <CSVBacktestPage />
                 </PrivateRoute>
               } />
               <Route path="/collaborate" element={

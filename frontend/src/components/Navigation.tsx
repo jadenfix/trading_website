@@ -9,6 +9,7 @@ export default function Navigation() {
     { path: '/', label: 'Dashboard', icon: 'chart-line' },
     { path: '/research', label: 'Research', icon: 'search' },
     { path: '/backtest', label: 'Backtesting', icon: 'analytics' },
+    { path: '/csv-backtest', label: 'CSV Backtest', icon: 'upload' },
     { path: '/collaborate', label: 'Collaborate', icon: 'users' },
     { path: '/codegen', label: 'Code Gen', icon: 'code' },
   ]

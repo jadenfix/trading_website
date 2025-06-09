@@ -1,0 +1,196 @@
+{
+  "symbol": "TEST",
+  "data": [
+    {
+      "timestamp": "2024-01-01 09:30:00",
+      "open": 100,
+      "high": 102.5,
+      "low": 99.5,
+      "close": 101.25,
+      "volume": 1500000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:31:00",
+      "open": 101.25,
+      "high": 103,
+      "low": 100.75,
+      "close": 102.5,
+      "volume": 1200000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:32:00",
+      "open": 102.5,
+      "high": 104.25,
+      "low": 101.5,
+      "close": 103.75,
+      "volume": 1800000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:33:00",
+      "open": 103.75,
+      "high": 105,
+      "low": 102.25,
+      "close": 104.5,
+      "volume": 2100000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:34:00",
+      "open": 104.5,
+      "high": 106.75,
+      "low": 103.5,
+      "close": 105.25,
+      "volume": 1900000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:35:00",
+      "open": 105.25,
+      "high": 107,
+      "low": 104,
+      "close": 106.5,
+      "volume": 2200000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:36:00",
+      "open": 106.5,
+      "high": 108.25,
+      "low": 105.25,
+      "close": 107.75,
+      "volume": 2000000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:37:00",
+      "open": 107.75,
+      "high": 109.5,
+      "low": 106.5,
+      "close": 108.25,
+      "volume": 2300000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:38:00",
+      "open": 108.25,
+      "high": 110,
+      "low": 107,
+      "close": 109.5,
+      "volume": 2100000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:39:00",
+      "open": 109.5,
+      "high": 111.25,
+      "low": 108.25,
+      "close": 110.75,
+      "volume": 2400000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:40:00",
+      "open": 110.75,
+      "high": 112.5,
+      "low": 109.5,
+      "close": 111.25,
+      "volume": 2200000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:41:00",
+      "open": 111.25,
+      "high": 113,
+      "low": 110,
+      "close": 112.5,
+      "volume": 2500000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:42:00",
+      "open": 112.5,
+      "high": 114.25,
+      "low": 111.25,
+      "close": 113.75,
+      "volume": 2300000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:43:00",
+      "open": 113.75,
+      "high": 115.5,
+      "low": 112.5,
+      "close": 114.25,
+      "volume": 2600000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:44:00",
+      "open": 114.25,
+      "high": 116,
+      "low": 113,
+      "close": 115.5,
+      "volume": 2400000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:45:00",
+      "open": 115.5,
+      "high": 117.25,
+      "low": 114.25,
+      "close": 116.75,
+      "volume": 2700000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:46:00",
+      "open": 116.75,
+      "high": 118.5,
+      "low": 115.5,
+      "close": 117.25,
+      "volume": 2500000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:47:00",
+      "open": 117.25,
+      "high": 119,
+      "low": 116,
+      "close": 118.5,
+      "volume": 2800000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:48:00",
+      "open": 118.5,
+      "high": 120.25,
+      "low": 117.25,
+      "close": 119.75,
+      "volume": 2600000,
+      "symbol": "TEST"
+    },
+    {
+      "timestamp": "2024-01-01 09:49:00",
+      "open": 119.75,
+      "high": 121.5,
+      "low": 118.5,
+      "close": 120.25,
+      "volume": 2900000,
+      "symbol": "TEST "
+    }
+  ],
+  "stats": {
+    "total_rows": 20,
+    "date_range": {
+      "start": "2024-01-01 09:30:00",
+      "end": "2024-01-01 09:49:00"
+    },
+    "symbols": [
+      "TEST",
+      "TEST "
+    ]
+  }
+}
