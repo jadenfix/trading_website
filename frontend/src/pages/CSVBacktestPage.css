@@ -63,6 +63,150 @@
   line-height: 1.5;
 }
 
+.format-specification {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.format-specification h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.format-example {
+  margin-bottom: 1.5rem;
+}
+
+.example-header {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.csv-example {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  white-space: pre;
+  border: 1px solid #334155;
+}
+
+.format-details h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.format-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.format-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.format-list li:last-child {
+  border-bottom: none;
+}
+
+.format-list li strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.format-notes {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.format-notes h4 {
+  margin-bottom: 0.75rem;
+  color: #0c4a6e;
+}
+
+.format-notes ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.format-notes li {
+  font-size: 0.8rem;
+  color: #374151;
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+.format-notes code {
+  background: #e0f2fe;
+  color: #0c4a6e;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.75rem;
+  border: 1px solid #7dd3fc;
+}
+
+.template-download {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 1rem;
+}
+
+.template-button {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.template-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+}
+
+.template-download small {
+  display: block;
+  color: #64748b;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
 .upload-form {
   display: flex;
   flex-direction: column;

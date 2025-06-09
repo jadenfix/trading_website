@@ -213,6 +213,30 @@ export default function CSVBacktestPage() {
     return strategies.find(s => s.name === selectedStrategy)
   }
 
+  const downloadTemplate = () => {
+    const templateData = `timestamp,open,high,low,close,volume,symbol
+2024-01-01 09:30:00,100.00,102.50,99.50,101.25,1500000,AAPL
+2024-01-01 09:31:00,101.25,103.00,100.75,102.50,1200000,AAPL
+2024-01-01 09:32:00,102.50,104.25,101.50,103.75,1800000,AAPL
+2024-01-01 09:33:00,103.75,105.00,102.25,104.50,2100000,AAPL
+2024-01-01 09:34:00,104.50,106.75,103.50,105.25,1900000,AAPL
+2024-01-01 09:35:00,105.25,107.00,104.00,106.50,2200000,AAPL
+2024-01-01 09:36:00,106.50,108.25,105.25,107.75,2000000,AAPL
+2024-01-01 09:37:00,107.75,109.50,106.50,108.25,2300000,AAPL
+2024-01-01 09:38:00,108.25,110.00,107.00,109.50,2100000,AAPL
+2024-01-01 09:39:00,109.50,111.25,108.25,110.75,2400000,AAPL`
+
+    const blob = new Blob([templateData], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'trading_data_template.csv'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="csv-backtest-page">
       <div className="page-header">
@@ -225,8 +249,56 @@ export default function CSVBacktestPage() {
         <div className="section upload-section">
           <h2>📁 Upload CSV Data</h2>
           <p className="section-description">
-            Upload CSV files with columns: timestamp, open, high, low, close, volume
+            Upload CSV files with OHLCV (Open, High, Low, Close, Volume) market data
           </p>
+          
+          <div className="format-specification">
+            <h3>📋 Required CSV Format</h3>
+            <div className="format-example">
+              <div className="example-header">Example CSV Structure:</div>
+              <pre className="csv-example">
+{`timestamp,open,high,low,close,volume,symbol
+2024-01-01 09:30:00,100.00,102.50,99.50,101.25,1500000,AAPL
+2024-01-01 09:31:00,101.25,103.00,100.75,102.50,1200000,AAPL
+2024-01-01 09:32:00,102.50,104.25,101.50,103.75,1800000,AAPL`}
+              </pre>
+            </div>
+            
+            <div className="format-details">
+              <h4>📝 Column Requirements:</h4>
+              <ul className="format-list">
+                <li><strong>timestamp/date:</strong> Date and time (YYYY-MM-DD HH:MM:SS or YYYY-MM-DD)</li>
+                <li><strong>open:</strong> Opening price (decimal number)</li>
+                <li><strong>high:</strong> Highest price (decimal number)</li>
+                <li><strong>low:</strong> Lowest price (decimal number)</li>
+                <li><strong>close:</strong> Closing price (decimal number)</li>
+                <li><strong>volume:</strong> Trading volume (integer, optional)</li>
+                <li><strong>symbol:</strong> Asset symbol (optional, can be specified below)</li>
+              </ul>
+              
+              <div className="format-notes">
+                <h4>💡 Format Notes:</h4>
+                <ul>
+                  <li>Column names are flexible: <code>Open/OPEN</code>, <code>date/datetime</code>, etc.</li>
+                  <li>Symbol column is optional if you specify it manually below</li>
+                  <li>Volume column is optional (defaults to 0)</li>
+                  <li>Supports various date formats: ISO, US format, etc.</li>
+                  <li>File size limit: 50MB</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="template-download">
+              <button
+                onClick={downloadTemplate}
+                className="template-button"
+              >
+                <span>📥</span>
+                Download CSV Template
+              </button>
+              <small>Get a sample CSV file with the correct format</small>
+            </div>
+          </div>
           
           <div className="upload-form">
             <div className="form-group">

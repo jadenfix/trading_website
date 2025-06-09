@@ -65,7 +65,7 @@ try {
 // Configure multer for CSV uploads
 const upload = multer({
   dest: 'uploads/',
-  fileFilter: (req: any, file: any, cb: any) => {
+  fileFilter: (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
     if (file.mimetype === 'text/csv' || file.originalname.endsWith('.csv')) {
       cb(null, true)
     } else {
@@ -160,7 +160,7 @@ const parseCSVData = (filePath: string, symbol?: string): Promise<ParsedCSVData>
     
     fs.createReadStream(filePath)
       .pipe(csvParser())
-      .on('data', (row: any) => {
+      .on('data', (row: Record<string, string>) => {
         try {
           // Handle various CSV column naming conventions
           const timestamp = row.timestamp || row.date || row.time || row.datetime
@@ -189,7 +189,7 @@ const parseCSVData = (filePath: string, symbol?: string): Promise<ParsedCSVData>
       })
       .on('end', () => {
         if (results.length === 0) {
-          reject(new Error('No valid data found in CSV'))
+          reject(new Error('No valid data found in CSV. Please ensure your CSV has columns: timestamp/date, open, high, low, close, and optionally volume and symbol. Check that data types are correct (numbers for OHLCV, valid dates for timestamp).'))
           return
         }
         
