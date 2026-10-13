@@ -1,6 +1,6 @@
 // src/components/BacktestRunner.tsx
-import React, { useState } from 'react';
-import { runBacktest, StrategyResult } from '../api/backtest';
+import { useState } from 'react';
+import { runBacktest, type StrategyResult } from '../api/backtest';
 
 export function BacktestRunner() {
   const [results, setResults] = useState<StrategyResult[]>([]);
