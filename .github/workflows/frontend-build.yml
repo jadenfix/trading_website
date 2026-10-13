@@ -60,3 +60,36 @@ jobs:
           path: artifacts/demo
           if-no-files-found: error
           retention-days: 7
+
+  publish-demo:
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    needs: [backend-fixture, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Skip when media is already tracked
+        id: media
+        run: |
+          if test -f docs/demo/capture.json; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/download-artifact@v4
+        if: ${{ steps.media.outputs.needed == 'true' }}
+        with:
+          name: trading-website-demo-${{ github.sha }}
+          path: docs/demo
+      - name: Commit actual browser demo
+        if: ${{ steps.media.outputs.needed == 'true' }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/demo
+          git commit -m "Add source-pinned browser demo"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}"
