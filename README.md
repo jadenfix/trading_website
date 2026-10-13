@@ -39,3 +39,18 @@ The frontend dev server proxies API requests to the backend on port `8000` by de
 ## Notes
 
 The `cpp_engine` folder contains minimal stub implementations so the optional native addon compiles. It does not perform any trading logic.
+
+## Frontend verification
+
+```sh
+cd frontend
+npm ci
+npm run build
+npm run dev
+```
+
+The production build performs TypeScript checks before bundling. A successful
+frontend build verifies compilation only; backtests still require the backend,
+its database, datasets, and native addon described above. Research/code-generation
+and collaboration screens currently include sample content or unavailable actions;
+they should not be presented as live AI or multi-user workflows in a demo.

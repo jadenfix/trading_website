@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './CollaboratePage.css'
 
 export default function CollaboratePage() {

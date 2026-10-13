@@ -1,5 +1,5 @@
 // frontend/src/pages/BacktestPage.tsx
-import React, { useState, useMemo, type FormEvent, useEffect } from 'react'
+import { useState, useMemo, type FormEvent, useEffect } from 'react'
 import { client } from '../api/client'
 import './BacktestPage.css'
 
@@ -102,7 +102,7 @@ export default function BacktestPage() {
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo | null>(null)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedSymbol, setSelectedSymbol] = useState('')
-  const [historicalDataLoading, setHistoricalDataLoading] = useState(false)
+  const [, setHistoricalDataLoading] = useState(false)
 
   // Simulation state
   const [simulationLoading, setSimulationLoading] = useState(false)
@@ -1120,7 +1120,7 @@ export default function BacktestPage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {advancedSimResult.trades.map((trade, idx) => (
+                          {advancedSimResult.trades.map((trade: { action: string; date: string; price: number; quantity: number; value: number; confidence: number; signal_strength: number; portfolio_value: number }, idx: number) => (
                             <tr key={idx} className={`trade-${trade.action.toLowerCase()}`}>
                               <td>{trade.date}</td>
                               <td className={`action-${trade.action.toLowerCase()}`}>
