@@ -27,12 +27,13 @@
 
 .backtest-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
   gap: 2rem;
   margin-bottom: 3rem;
 }
 
 .section {
+  min-width: 0;
   background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
   border-radius: 16px;
@@ -550,7 +551,7 @@
   }
   
   .backtest-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
   }
   
@@ -561,7 +562,7 @@
   
   .info-grid,
   .params-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   
   .result-header {
@@ -580,6 +581,7 @@
   }
   
   .result-metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
-} 
+}
+.csv-backtest-page pre { max-width: 100%; overflow-x: auto; }

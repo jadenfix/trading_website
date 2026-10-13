@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import './DashboardPage.css'
 
@@ -86,7 +85,7 @@ export default function DashboardPage() {
         <div className="header-metrics">
           <div className="live-indicator">
             <div className="pulse"></div>
-            <span>LIVE MARKET DATA</span>
+            <span>SAMPLE PORTFOLIO DATA</span>
           </div>
         </div>
       </div>

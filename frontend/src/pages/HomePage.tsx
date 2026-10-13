@@ -1,5 +1,4 @@
 // frontend/src/pages/HomePage.tsx
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 

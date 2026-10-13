@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import './Navigation.css'
 
@@ -40,6 +39,7 @@ export default function Navigation() {
           <Link
             key={item.path}
             to={item.path}
+            aria-label={item.label}
             className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
           >
             <span className={`nav-icon icon-${item.icon}`}></span>
