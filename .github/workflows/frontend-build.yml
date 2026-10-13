@@ -17,3 +17,5 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --no-audit --no-fund
       - run: npm run build
+      - run: npx playwright-core install --only-shell --with-deps chromium
+      - run: node ../scripts/check_ui_browser.cjs

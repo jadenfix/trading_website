@@ -54,3 +54,10 @@ frontend build verifies compilation only; backtests still require the backend,
 its database, datasets, and native addon described above. Research/code-generation
 and collaboration screens currently include sample content or unavailable actions;
 they should not be presented as live AI or multi-user workflows in a demo.
+
+Browser checks now exercise all six routes, accessible navigation, dataset
+selection, and actual unavailable-backend error rendering at 1440px and 390px.
+Install frontend dependencies and Chromium using `npx playwright-core install
+chromium`, then run `node scripts/check_ui_browser.cjs`. `CHROME_BIN` can select
+a local Chromium binary. This gate verifies UI/navigation/error behavior; it
+does not establish successful backtests, authentication, or live portfolio data.

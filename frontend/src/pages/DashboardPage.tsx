@@ -85,7 +85,7 @@ export default function DashboardPage() {
         <div className="header-metrics">
           <div className="live-indicator">
             <div className="pulse"></div>
-            <span>LIVE MARKET DATA</span>
+            <span>SAMPLE PORTFOLIO DATA</span>
           </div>
         </div>
       </div>

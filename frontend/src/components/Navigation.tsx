@@ -39,6 +39,7 @@ export default function Navigation() {
           <Link
             key={item.path}
             to={item.path}
+            aria-label={item.label}
             className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
           >
             <span className={`nav-icon icon-${item.icon}`}></span>
