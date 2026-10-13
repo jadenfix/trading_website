@@ -3,13 +3,7 @@
 import dotenv from 'dotenv'
 dotenv.config() // ← Load .env as early as possible
 
-import express, { Request, Response, NextFunction } from 'express'
-import cors from 'cors'
-
-import authRoutes from './routes/authRoutes'
-import userRoutes from './routes/userRoutes'
-import backtestRoutes from './routes/backtestRoutes'    // ← ← ←
-import { errorHandler } from './middleware/errorHandler'
+import { app } from './app'
 import { connectToDatabase } from './utils/db'
 
 // Sanity-check your secrets
@@ -22,38 +16,17 @@ console.log(
 
 async function main() {
   // 1️⃣ Connect to the database (or stub)
-  try {
-    await connectToDatabase()
-  } catch (err) {
-    console.log('⚠️  Continuing without database connection')
+  if (process.env.SKIP_DB !== '1') {
+    try {
+      await connectToDatabase()
+    } catch (err) {
+      console.log('⚠️  Continuing without database connection')
+    }
+  } else {
+    console.log('ℹ️  Database intentionally skipped for provider-free fixture mode')
   }
 
-  // 2️⃣ Create the Express app
-  const app = express()
-
-  // 3️⃣ Core middleware
-  app.use(cors())
-  app.use(express.json())
-
-  // 4️⃣ Health-check
-  app.get('/api/ping', (_req: Request, res: Response) => {
-    res.json({ pong: true })
-  })
-
-  // 5️⃣ Mount auth routes (public)
-  app.use('/api/auth', authRoutes)
-
-  // 7️⃣ Mount backtest routes
-  app.use('/api/backtest', backtestRoutes)
-
-  // 6️⃣ Mount user routes (some public, some protected)
-  app.use('/api/users', userRoutes)
-
-
-  // 8️⃣ Global error handler (must come last)
-  app.use(errorHandler as any)
-
-  // 9️⃣ Start listening
+  // Start the shared app exported for real HTTP integration tests.
   const port = Number(process.env.PORT ?? 8000)
   app.listen(port, () => {
     console.log(`🚀 Backend listening on port ${port}`)

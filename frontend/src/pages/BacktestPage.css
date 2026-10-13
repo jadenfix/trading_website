@@ -17,6 +17,16 @@
   backdrop-filter: blur(20px);
 }
 
+.fixture-disclosure {
+  max-width: 900px;
+  margin: 0.8rem auto 0;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(250, 204, 21, 0.45);
+  border-radius: 0.75rem;
+  background: rgba(250, 204, 21, 0.09);
+  color: #fef3c7;
+}
+
 .backtest-header h1 {
   font-size: 2.5rem;
   font-weight: 700;

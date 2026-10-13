@@ -3,6 +3,20 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  backend-fixture:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
   build:
     runs-on: ubuntu-latest
     defaults:
@@ -19,3 +33,22 @@ jobs:
       - run: npm run build
       - run: npx playwright-core install --only-shell --with-deps chromium
       - run: node ../scripts/check_ui_browser.cjs
+      - name: Verify tracked demo media
+        if: ${{ hashFiles('docs/demo/capture.json') != '' }}
+        working-directory: .
+        run: node scripts/verify_demo_media.cjs
+      - name: Assert tests leave tracked files clean
+        working-directory: .
+        run: git diff --exit-code && test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Capture actual browser demo
+        if: ${{ hashFiles('docs/demo/capture.json') == '' }}
+        working-directory: .
+        run: node scripts/capture_demo_browser.cjs --output artifacts/demo
+      - name: Upload actual browser demo
+        if: ${{ hashFiles('docs/demo/capture.json') == '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-website-demo-${{ github.sha }}
+          path: artifacts/demo
+          if-no-files-found: error
+          retention-days: 7

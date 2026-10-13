@@ -4,32 +4,13 @@ import { client } from '../api/client'
 import './BacktestPage.css'
 
 const STRATEGIES_BY_DATASET: Record<string,string[]> = {
-  stocks_april: [
-    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-    'Pairs_MSFT_NVDA','Pairs_NVDA_GOOG','Pairs_MSFT_GOOG',
-    'LeadLag_MSFT->NVDA','LeadLag_NVDA->MSFT'
-  ],
-  '2024_only': [
-    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-    'Pairs_BTC_ETH','Pairs_ETH_SOL','Pairs_BTC_SOL','Pairs_ETH_ADA','Pairs_SOL_ADA',
-    'LeadLag_BTC->ETH','LeadLag_ETH->BTC','LeadLag_ETH->SOL','LeadLag_SOL->ETH'
-  ],
-  '2024_2025': [
-    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-    'Pairs_BTC_ETH','Pairs_ETH_SOL','Pairs_BTC_SOL','Pairs_ETH_ADA','Pairs_SOL_ADA',
-    'LeadLag_BTC->ETH','LeadLag_ETH->BTC','LeadLag_ETH->SOL','LeadLag_SOL->ETH'
-  ],
-  'btc_2024': [
-    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-    'Bayesian_ML','CNN_LSTM','RNN_Momentum'
-  ],
-  'eth_2024': [
-    'MAC_5_20','VWAP_2.0','ORB_30','Momentum_5_10_2_3',
-    'Bayesian_ML','CNN_LSTM','RNN_Momentum'
-  ]
+  stocks_april: ['FIXTURE_BUY_HOLD'],
+  btc_2024: ['FIXTURE_BUY_HOLD'],
+  eth_2024: ['FIXTURE_BUY_HOLD']
 }
 
 const STRATEGY_DESCRIPTIONS: Record<string, string> = {
+  'FIXTURE_BUY_HOLD': 'Deterministic provider-free replay over the checked-in fictional OHLCV fixture',
   'MAC_5_20': 'Moving Average Crossover (5-day vs 20-day)',
   'VWAP_2.0': 'Volume Weighted Average Price strategy',
   'ORB_30': 'Opening Range Breakout (30-minute)',
@@ -275,7 +256,8 @@ export default function BacktestPage() {
     <div className="backtest-page">
       <div className="backtest-header">
         <h1>📈 Advanced Trading Engine</h1>
-        <p>Test strategies, get ML predictions, and run simulations with our Bayesian engine</p>
+        <p>Provider-free educational replay using checked-in fictional market fixtures</p>
+        <p className="fixture-disclosure"><strong>Fixture mode:</strong> results are illustrative software receipts, not live data, investment advice, or measured strategy performance.</p>
       </div>
 
       <div className="trading-grid">
