@@ -60,6 +60,17 @@ interface DatasetInfo {
   total_records: number;
 }
 
+interface SimulationTrade {
+  date: string;
+  action: string;
+  price: number;
+  quantity: number;
+  value: number;
+  confidence: number;
+  signal_strength: number;
+  portfolio_value: number;
+}
+
 interface SimulationResult {
   simulation_id: string;
   parameters: any;
@@ -102,7 +113,7 @@ export default function BacktestPage() {
   const [datasetInfo, setDatasetInfo] = useState<DatasetInfo | null>(null)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedSymbol, setSelectedSymbol] = useState('')
-  const [, setHistoricalDataLoading] = useState(false)
+  const [historicalDataLoading, setHistoricalDataLoading] = useState(false)
 
   // Simulation state
   const [simulationLoading, setSimulationLoading] = useState(false)
@@ -424,6 +435,7 @@ export default function BacktestPage() {
                         <span className="label-text">Symbol</span>
                         <select 
                           value={selectedSymbol} 
+                          disabled={historicalDataLoading}
                           onChange={e => setSelectedSymbol(e.target.value)}
                           className="form-select"
                         >
@@ -439,6 +451,7 @@ export default function BacktestPage() {
                         <span className="label-text">Date</span>
                         <select 
                           value={selectedDate} 
+                          disabled={historicalDataLoading}
                           onChange={e => setSelectedDate(e.target.value)}
                           className="form-select"
                         >
@@ -1120,7 +1133,7 @@ export default function BacktestPage() {
                           </tr>
                         </thead>
                         <tbody>
-                          {advancedSimResult.trades.map((trade: { action: string; date: string; price: number; quantity: number; value: number; confidence: number; signal_strength: number; portfolio_value: number }, idx: number) => (
+                          {advancedSimResult.trades.map((trade: SimulationTrade, idx: number) => (
                             <tr key={idx} className={`trade-${trade.action.toLowerCase()}`}>
                               <td>{trade.date}</td>
                               <td className={`action-${trade.action.toLowerCase()}`}>
