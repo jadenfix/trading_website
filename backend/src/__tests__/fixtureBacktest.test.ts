@@ -14,10 +14,12 @@ describe('provider-free fixture replay', () => {
       mode: 'fictional-fixture',
       data_points: 8,
       fills: 2,
+      quantity: 236,
+      execution_status: 'completed',
       source: 'checked-in fictional OHLCV fixture'
     })
     expect(response.body[0].final_equity).toBeCloseTo(103607.8854, 4)
-    expect(response.body[0].max_dd_pct).toBe(0)
+    expect(response.body[0].max_dd_pct).toBeCloseTo(0.1997032, 6)
   })
 
   it.each([
@@ -33,7 +35,7 @@ describe('provider-free fixture replay', () => {
     await request(app).get('/api/ping').expect(200, { pong: true, mode: 'provider-free' })
   })
 
-  it('keeps the fixture deterministic when cash cannot buy one unit', async () => {
+  it('returns a truthful no-trade receipt when cash cannot buy one commission-adjusted unit', async () => {
     const response = await request(app)
       .get('/api/backtest/run')
       .query({ dataset: 'btc_2024', strategy: 'FIXTURE_BUY_HOLD', cash: '1000' })
@@ -41,10 +43,46 @@ describe('provider-free fixture replay', () => {
 
     expect(response.body[0]).toMatchObject({
       mode: 'fictional-fixture',
-      fills: 2,
+      fills: 0,
+      quantity: 0,
+      execution_status: 'no-trade-insufficient-cash',
+      return_pct: 0,
+      max_dd_pct: 0,
       realized_pnl: 0,
       commission: 0,
       final_equity: 1000
     })
+  })
+
+  it('does not cross the commission-adjusted one-unit boundary early', async () => {
+    const response = await request(app)
+      .get('/api/backtest/run')
+      .query({ dataset: 'btc_2024', strategy: 'FIXTURE_BUY_HOLD', cash: '42842.79' })
+      .expect(200)
+
+    expect(response.body[0]).toMatchObject({
+      fills: 0,
+      quantity: 0,
+      commission: 0,
+      realized_pnl: 0,
+      final_equity: 42842.79,
+      execution_status: 'no-trade-insufficient-cash'
+    })
+  })
+
+  it('executes exactly one unit at the commission-adjusted boundary', async () => {
+    const response = await request(app)
+      .get('/api/backtest/run')
+      .query({ dataset: 'btc_2024', strategy: 'FIXTURE_BUY_HOLD', cash: '42842.8' })
+      .expect(200)
+
+    expect(response.body[0]).toMatchObject({
+      fills: 2,
+      quantity: 1,
+      realized_pnl: 59100,
+      final_equity: 101798.1,
+      execution_status: 'completed'
+    })
+    expect(response.body[0].commission).toBeCloseTo(144.7, 8)
   })
 })

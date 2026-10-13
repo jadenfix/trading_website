@@ -550,6 +550,8 @@ router.get('/run', async (req, res, next) => {
     let result: StrategyResult;
     let executionMode: 'native-addon' | 'fictional-fixture'
     let resultSource: string
+    let executionStatus: 'completed' | 'no-trade-insufficient-cash' = 'completed'
+    let filledQuantity: number | null = null
 
     // The fixture path deliberately ignores the optional native addon so the
     // published educational receipt is identical on every machine.
@@ -558,26 +560,33 @@ router.get('/run', async (req, res, next) => {
       const entry = Number(ordered[0].close)
       const exit = Number(ordered[ordered.length - 1].close)
       const commissionRate = 0.001
-      const quantity = Math.floor(initialCash / (entry * (1 + commissionRate)))
+      const entryCostPerUnit = entry * (1 + commissionRate)
+      // Keep the exact one-unit boundary stable despite binary floating-point
+      // representation without accepting a materially underfunded order.
+      const quantity = Math.floor((initialCash / entryCostPerUnit) + 1e-12)
       const entryCommission = quantity * entry * commissionRate
       const exitCommission = quantity * exit * commissionRate
       const realizedPnl = quantity * (exit - entry)
       const finalEquity = initialCash + realizedPnl - entryCommission - exitCommission
 
-      let runningPeak = Number(ordered[0].close)
+      let runningPeak = initialCash
       let maxDrawdown = 0
       for (const row of ordered) {
         const close = Number(row.close)
-        runningPeak = Math.max(runningPeak, close)
-        maxDrawdown = Math.max(maxDrawdown, ((runningPeak - close) / runningPeak) * 100)
+        const liquidationEquity = initialCash + quantity * (close - entry) - entryCommission - quantity * close * commissionRate
+        runningPeak = Math.max(runningPeak, liquidationEquity)
+        maxDrawdown = Math.max(maxDrawdown, ((runningPeak - liquidationEquity) / runningPeak) * 100)
       }
+
+      executionStatus = quantity > 0 ? 'completed' : 'no-trade-insufficient-cash'
+      filledQuantity = quantity
 
       result = {
         total_return_pct: ((finalEquity - initialCash) / initialCash) * 100,
         max_drawdown_pct: maxDrawdown,
         realized_pnl: realizedPnl,
         total_commission: entryCommission + exitCommission,
-        num_fills: 2,
+        num_fills: quantity > 0 ? 2 : 0,
         final_equity: finalEquity,
       }
       executionMode = 'fictional-fixture'
@@ -627,7 +636,9 @@ router.get('/run', async (req, res, next) => {
         realized_pnl: result.realized_pnl,
         commission: result.total_commission,
         fills: result.num_fills,
+        quantity: filledQuantity,
         final_equity: result.final_equity,
+        execution_status: executionStatus,
         mode: executionMode,
         data_points: fixtureData.length,
         source: resultSource,

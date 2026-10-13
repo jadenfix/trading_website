@@ -309,8 +309,8 @@ export default function BacktestPage() {
                     value={cash}
                     onChange={e => setCash(Number(e.target.value))}
                     className="form-input"
-                    min="1000"
-                    step="1000"
+                    min="0.01"
+                    step="0.01"
                   />
                 </label>
               </div>
