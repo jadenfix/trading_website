@@ -4,11 +4,19 @@ const path = require('node:path');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.resolve(__dirname, '../frontend/node_modules/playwright-core'));
 (async () => {
   const server = spawn(process.execPath, [path.resolve(__dirname, '../frontend/node_modules/vite/bin/vite.js'), '--host', '127.0.0.1', '--port', '5188'], { cwd: path.resolve(__dirname, '../frontend'), stdio: ['ignore', 'pipe', 'pipe'] });
-  await new Promise((resolve, reject) => {
-    const timer = setTimeout(() => { server.kill(); reject(new Error('Vite startup timed out')); }, 15000);
-    server.stdout.on('data', chunk => { if (chunk.toString().includes('Local:')) { clearTimeout(timer); resolve(); } });
-    server.on('exit', code => { clearTimeout(timer); reject(new Error('Vite exited: ' + code)); });
-  });
+  let output = '';
+  server.stdout.on('data', chunk => { output = (output + chunk.toString()).slice(-10000); });
+  server.stderr.on('data', chunk => { output = (output + chunk.toString()).slice(-10000); });
+  let ready = false;
+  for (let attempt = 0; attempt < 150; attempt++) {
+    if (server.exitCode !== null) throw new Error('Vite exited: ' + output);
+    try {
+      const response = await fetch('http://127.0.0.1:5188/', { signal: AbortSignal.timeout(1000) });
+      if (response.ok) { ready = true; break; }
+    } catch (_) {}
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  if (!ready) { server.kill(); throw new Error('Vite startup timed out: ' + output); }
   const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true, args: ['--no-sandbox'] });
   try {
     for (const width of [1440, 390]) {
