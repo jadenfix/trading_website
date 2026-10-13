@@ -62,7 +62,10 @@ jobs:
           retention-days: 7
 
   publish-demo:
-    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+    # Only the same-repository PR event may publish a newly captured artifact.
+    # A push to the PR branch also emits a push event; allowing both writers
+    # makes otherwise successful runs race on the branch ref.
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
     needs: [backend-fixture, build]
     runs-on: ubuntu-latest
     permissions:
