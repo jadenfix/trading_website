@@ -39,6 +39,7 @@ jobs:
       - run: npm ci --prefix ../backend --no-audit --no-fund
       - run: npm run build
       - run: npx playwright-core install --only-shell --with-deps chromium
+      - run: sudo apt-get install -y ffmpeg
       - run: node ../scripts/check_ui_browser.cjs
       - name: Verify tracked demo media
         if: ${{ hashFiles('docs/demo/capture.json') != '' }}
