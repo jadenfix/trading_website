@@ -3,6 +3,23 @@ on: [push, pull_request]
 permissions:
   contents: read
 jobs:
+  backend-fixture:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
   build:
     runs-on: ubuntu-latest
     defaults:
@@ -10,12 +27,72 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci --no-audit --no-fund
+      - run: npm ci --prefix ../backend --no-audit --no-fund
       - run: npm run build
       - run: npx playwright-core install --only-shell --with-deps chromium
+      - run: sudo apt-get install -y ffmpeg
       - run: node ../scripts/check_ui_browser.cjs
+      - name: Verify tracked demo media
+        if: ${{ hashFiles('docs/demo/capture.json') != '' }}
+        working-directory: .
+        run: node scripts/verify_demo_media.cjs
+      - name: Assert tests leave tracked files clean
+        working-directory: .
+        run: git diff --exit-code && test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Capture actual browser demo
+        if: ${{ hashFiles('docs/demo/capture.json') == '' }}
+        working-directory: .
+        run: node scripts/capture_demo_browser.cjs --output artifacts/demo
+      - name: Upload actual browser demo
+        if: ${{ hashFiles('docs/demo/capture.json') == '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: trading-website-demo-${{ github.sha }}
+          path: artifacts/demo
+          if-no-files-found: error
+          retention-days: 7
+
+  publish-demo:
+    # Only the same-repository PR event may publish a newly captured artifact.
+    # A push to the PR branch also emits a push event; allowing both writers
+    # makes otherwise successful runs race on the branch ref.
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    needs: [backend-fixture, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Skip when media is already tracked
+        id: media
+        run: |
+          if test -f docs/demo/capture.json; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/download-artifact@v4
+        if: ${{ steps.media.outputs.needed == 'true' }}
+        with:
+          name: trading-website-demo-${{ github.sha }}
+          path: docs/demo
+      - name: Commit actual browser demo
+        if: ${{ steps.media.outputs.needed == 'true' }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add docs/demo
+          git commit -m "Add source-pinned browser demo"
+          git push origin "HEAD:${{ github.event.pull_request.head.ref || github.ref_name }}"

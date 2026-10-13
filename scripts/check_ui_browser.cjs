@@ -1,24 +1,14 @@
 const assert = require('node:assert/strict');
-const { spawn } = require('node:child_process');
 const path = require('node:path');
+const { startDemoServers } = require('./browser_harness.cjs');
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.resolve(__dirname, '../frontend/node_modules/playwright-core'));
+
 (async () => {
-  const server = spawn(process.execPath, [path.resolve(__dirname, '../frontend/node_modules/vite/bin/vite.js'), '--host', '127.0.0.1', '--port', '5188'], { cwd: path.resolve(__dirname, '../frontend'), stdio: ['ignore', 'pipe', 'pipe'] });
-  let output = '';
-  server.stdout.on('data', chunk => { output = (output + chunk.toString()).slice(-10000); });
-  server.stderr.on('data', chunk => { output = (output + chunk.toString()).slice(-10000); });
-  let ready = false;
-  for (let attempt = 0; attempt < 150; attempt++) {
-    if (server.exitCode !== null) throw new Error('Vite exited: ' + output);
-    try {
-      const response = await fetch('http://127.0.0.1:5188/', { signal: AbortSignal.timeout(1000) });
-      if (response.ok) { ready = true; break; }
-    } catch (_) {}
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
-  if (!ready) { server.kill(); throw new Error('Vite startup timed out: ' + output); }
-  const browser = await chromium.launch({ executablePath: process.env.CHROME_BIN, headless: true, args: ['--no-sandbox'] });
+  let servers;
+  let browser;
   try {
+    servers = await startDemoServers();
+    browser = await chromium.launch({ executablePath: process.env.CHROME_BIN || undefined, headless: true, args: ['--no-sandbox'] });
     for (const width of [1440, 390]) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       const failures = [];
@@ -33,16 +23,20 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.resolve(__dir
       await page.getByRole('link', { name: 'Backtesting', exact: true }).click();
       assert.ok(page.url().endsWith('/backtest'));
       await page.locator('.backtest-form select').first().selectOption('btc_2024');
-      assert.equal(await page.locator('.backtest-form select').nth(1).inputValue(), 'MAC_5_20');
+      assert.equal(await page.locator('.backtest-form select').nth(1).inputValue(), 'FIXTURE_BUY_HOLD');
       await page.getByRole('button', { name: 'Run Backtest', exact: false }).click();
-      await page.locator('.error-message').first().waitFor();
-      assert.ok((await page.locator('.error-message').first().innerText()).trim());
+      await page.locator('.results-container').waitFor();
+      const receipt = await page.locator('.results-container').innerText();
+      assert.match(receipt, /FICTIONAL-FIXTURE/i);
+      assert.match(receipt, /CHECKED-IN FICTIONAL OHLCV FIXTURE/i);
       assert.deepEqual(failures, []);
       const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }));
-      if (dimensions.content > dimensions.width + 1) console.log(await page.evaluate(() => Array.from(document.querySelectorAll('*')).map(e => ({ tag:e.tagName, cls:e.className, right:e.getBoundingClientRect().right, width:e.getBoundingClientRect().width })).filter(e => e.right > innerWidth + 1 && e.width > 200).slice(0, 15)));
       assert.ok(dimensions.content <= dimensions.width + 1, JSON.stringify(dimensions));
       await page.close();
-      console.log('PASS: actual browser navigation and unavailable-backend error, viewport ' + width);
+      console.log('PASS: production browser navigation and provider-free fixture replay, viewport ' + width);
     }
-  } finally { await browser.close(); server.kill(); }
+  } finally {
+    if (browser) await browser.close();
+    if (servers) await servers.stop();
+  }
 })().catch(error => { console.error(error); process.exit(1); });

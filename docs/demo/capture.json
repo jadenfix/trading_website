@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "captured_source_commit": "1b3ac4921d7f031ce3bb1b6ebd978495edd78bba",
+  "captured_source_tree": "19a87c40e888e7fec8cfd332e063dd54e7e52b9b",
+  "scope": {
+    "mode": "provider-free-fictional-fixture",
+    "claim": "Actual production-build browser replay of checked-in fictional OHLCV rows.",
+    "exclusions": [
+      "live market data",
+      "investment advice",
+      "native strategy validation",
+      "trading performance"
+    ]
+  },
+  "browser": {
+    "engine": "Chromium",
+    "viewport": "1280x720"
+  },
+  "receipt": {
+    "strategy_on_dataset": "FIXTURE_BUY_HOLD@btc_2024",
+    "return_pct": 117.9106,
+    "max_dd_pct": 0.17120000000001165,
+    "realized_pnl": 118200,
+    "commission": 289.40000000000003,
+    "fills": 2,
+    "quantity": 2,
+    "final_equity": 217910.6,
+    "execution_status": "completed",
+    "mode": "fictional-fixture",
+    "data_points": 13,
+    "source": "checked-in fictional OHLCV fixture"
+  },
+  "source_inputs": [
+    {
+      "path": "backend/package-lock.json",
+      "git_blob": "e4261ab23b73f2dd6b2ba698f2761d4a6199ff3c",
+      "sha256": "3a7aadc53a3aed22d9b6568f2233333dfac6f3bb47ec9f11196e43f4fe938f5b"
+    },
+    {
+      "path": "backend/package.json",
+      "git_blob": "b068b6cc37b50fc929c708683a49b29f44ddace9",
+      "sha256": "dc590b50aefae7aca561f2e685f25ee90fac6ea375517117f7bff46097376c0e"
+    },
+    {
+      "path": "backend/src/app.ts",
+      "git_blob": "e00eb3359e27be061413f934f08d36deb511a93c",
+      "sha256": "c8508ac5c18d30909cf92a593ca2ee0b1a867c1932f71fa9a17b4247eb28e7e0"
+    },
+    {
+      "path": "backend/src/index.ts",
+      "git_blob": "fefa215372be46e442adb328f24440b9678375c4",
+      "sha256": "84fd5849ddc4b65d2ab204a66e58fbc2d42cdd488b2475db664fb7493e19875d"
+    },
+    {
+      "path": "backend/src/routes/backtestRoutes.ts",
+      "git_blob": "485d5f9e06d6f337da9b1dc5f80978631e1ece05",
+      "sha256": "cf307108126dd1e44745033c732d91b80ffec0929fef739f76fbfea34139d74c"
+    },
+    {
+      "path": "frontend/package-lock.json",
+      "git_blob": "b490da14bfaff0cd424843970b43643b48629230",
+      "sha256": "f775f6c32f5dc9877d212b830426af06a05b16dc48916a4e1c4939b6755e344c"
+    },
+    {
+      "path": "frontend/package.json",
+      "git_blob": "24f4d4f30bc043f4713777a53ed1318cff2706a3",
+      "sha256": "689ee8c1f3fe2d11d6890a0edf84262fe81d722ec62273d64a42fabb1faaffc6"
+    },
+    {
+      "path": "frontend/src/App.css",
+      "git_blob": "d7d1562ddb69ec1ab603e1c74a1a9906bdbfca4a",
+      "sha256": "2a567e3034f97c6ce5dd54057d920431e6e38769ce6b14db145e7417b556afe9"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "git_blob": "15453abc0a585fd9f1ee03aaefaca1d85a7ec9d2",
+      "sha256": "0969322c70552aa101c496a5a42596e55dfe58ad9d1868b594df7238489d3909"
+    },
+    {
+      "path": "frontend/src/api/backtest.ts",
+      "git_blob": "ce0a9dc0542d1e86ec17736f209fe7c5025e31e8",
+      "sha256": "1a6e7e9b30e8397866f7378be2cf3333ab0760038fdbf283bb69fbcb2bb55549"
+    },
+    {
+      "path": "frontend/src/api/client.ts",
+      "git_blob": "e16250a176c70fdb892f5131d6315546ad155d47",
+      "sha256": "bade7ea9f43297979cca926bf4d880944f96a908a735ff1cd04a2d7f4776f2e1"
+    },
+    {
+      "path": "frontend/src/assets/react.svg",
+      "git_blob": "6c87de9bb3358469122cc991d5cf578927246184",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "frontend/src/components/BacktestRunner.tsx",
+      "git_blob": "1d4995fbeb3100cf52c977d183ca6ac0677a4732",
+      "sha256": "60e4ce4ae2ba898f570103be8c5113d71c3c5bd4a0775f07263c0579e6ea5da6"
+    },
+    {
+      "path": "frontend/src/components/Navigation.css",
+      "git_blob": "a658d5f20c393fc8c77041dae30267d13fc0ee5d",
+      "sha256": "9efe277de2df5bcdac1c108ceaab92b6e82d0d565ed80225d1ca931b0f1b93c5"
+    },
+    {
+      "path": "frontend/src/components/Navigation.tsx",
+      "git_blob": "8e56e26fd76760661ba17e6095f08ef1f19bed13",
+      "sha256": "c14e43d377bc97cacbb9cf08ac066118762457061fffc549709983678949094a"
+    },
+    {
+      "path": "frontend/src/components/Ping.tsx",
+      "git_blob": "45600035e246e498654ce0ac926b39d16e2421a2",
+      "sha256": "6ffbe9e22a025de03798ede524dc9a2e25af66bb91ee3b0d0393354fab5deafb"
+    },
+    {
+      "path": "frontend/src/context/AuthContext.tsx",
+      "git_blob": "e9af3889595c9b45e1e2be466656c2a529ba9a9d",
+      "sha256": "7f1caad2bdba5ad41c99dfa81f09d2d5b0955a853b1c67d4f198d4e7dffd044c"
+    },
+    {
+      "path": "frontend/src/index.css",
+      "git_blob": "e6d93364bc489427d6f61d937a2910aa4a0f5f61",
+      "sha256": "5b6f6e67d317fff7361536389aaac19c9a2a8fd612906177ae7bec31e692fbfd"
+    },
+    {
+      "path": "frontend/src/main.tsx",
+      "git_blob": "882d2bb917ff3e52e76caf6f31c98e549b5060db",
+      "sha256": "ddf33dbb7e53302df8530734425a1c71e2352cde0b9ea4db2bb5707f99d7c0fe"
+    },
+    {
+      "path": "frontend/src/pages/BacktestPage.css",
+      "git_blob": "adce9fc35a5d5d243d7f65a93878629c4d04f7d7",
+      "sha256": "894585732f2de02d65dd623334713806643e61482a5da286edead448ada711d8"
+    },
+    {
+      "path": "frontend/src/pages/BacktestPage.tsx",
+      "git_blob": "c1b939adf60315f0da3595345b1d6b02d05504da",
+      "sha256": "8d5e0b2669dc5164a896072223d2f239ffb561d74214f3387defa064b59def11"
+    },
+    {
+      "path": "frontend/src/pages/CSVBacktestPage.css",
+      "git_blob": "24e5bc5260581f722c0f7fdc80f5583efe7df027",
+      "sha256": "7a20a73ec55ecdb749e8ec95d32f58526c7553bcd0a821884036a21c82e0bb6a"
+    },
+    {
+      "path": "frontend/src/pages/CSVBacktestPage.tsx",
+      "git_blob": "e8bf55748dcbf71721595d50fe2b7feab485930b",
+      "sha256": "7ddb920f40d5c0e01b7c3d5035f1b479b920da0d1f84476c013e792f61998546"
+    },
+    {
+      "path": "frontend/src/pages/CodeGenPage.css",
+      "git_blob": "f0827dacaf3b94281a98537fdf259b85609b679b",
+      "sha256": "24b130ff58aa1b8e59cd3e83401b0b6112ce75ef18a15ec48af76e027a515cc6"
+    },
+    {
+      "path": "frontend/src/pages/CodeGenPage.tsx",
+      "git_blob": "14db9782bc553f5a2796bd097db4abe211d23a45",
+      "sha256": "4510bdd646f03678f9b4d2fc04b8424c7329f1ca8f618f7dbd192c1867257cca"
+    },
+    {
+      "path": "frontend/src/pages/CollaboratePage.css",
+      "git_blob": "957d7f818b0d8e6e588ebc3bb053c34bbdd02ec5",
+      "sha256": "e8b876ec91914243eb8edcda92b3f4e50b803a8099093380e5facbf244e5ad56"
+    },
+    {
+      "path": "frontend/src/pages/CollaboratePage.tsx",
+      "git_blob": "fb8ee78d7be08ffe1bc8924a11ce519ff2a12fa5",
+      "sha256": "d18c6fb0071a40d624e80d197b1be6350f314bf41d989c07785ede380e430561"
+    },
+    {
+      "path": "frontend/src/pages/DashboardPage.css",
+      "git_blob": "47c8d9472eca1d186c7b349ada1e002a329ab8f3",
+      "sha256": "b9410ae720182a38379b22ebf0a2e72617e3e604cdffe7232d67154a02322278"
+    },
+    {
+      "path": "frontend/src/pages/DashboardPage.tsx",
+      "git_blob": "c0370acd6eded763b0929480159eaec469ec28f7",
+      "sha256": "9d81ea96ad018cb4a81b6253237ea83dc47280d997ec1d380bc032989a6f0607"
+    },
+    {
+      "path": "frontend/src/pages/HomePage.tsx",
+      "git_blob": "04b857f530e67c66e6f3bdba8cfd963ff701a559",
+      "sha256": "9be6ec71979ca743ec4975f6e80386b00500f5a4eeea3a633d12f3777bf02207"
+    },
+    {
+      "path": "frontend/src/pages/LoginPage.tsx",
+      "git_blob": "e3dd8c0861c6a08bab918e2d171de4624d26bb17",
+      "sha256": "a2cd491d405c192f9ffe1393c9c76950453d1ab0ad94e5d777de87417e5056f6"
+    },
+    {
+      "path": "frontend/src/pages/RegisterPage.tsx",
+      "git_blob": "e9d5b49eea9a116d2c842da3ee28e38360b06bd8",
+      "sha256": "c702579cf683af0b9b8a66ab9d3282459db95b343e2b84a4b66758fbead825d8"
+    },
+    {
+      "path": "frontend/src/pages/ResearchPage.css",
+      "git_blob": "c39acf1f2569daa6d675bb87a7688ac523e557c4",
+      "sha256": "8f7b38c5d445a8d0f9984a638b97b26a8b514cd51daa1f9f85cbbdcae400e188"
+    },
+    {
+      "path": "frontend/src/pages/ResearchPage.tsx",
+      "git_blob": "3f709f29f0e59aa5eb59f44e9735623f3d6823e3",
+      "sha256": "5053e3609868d25981d4a24d93849c574cbc44fd9efd2e7b4df09a4ace27d47e"
+    },
+    {
+      "path": "frontend/src/services/authService.ts",
+      "git_blob": "3bb3bce3c726a59f692df771135cc8714f5140fc",
+      "sha256": "867549295a2e2c39d4696c6d404dc8c9a0c10060cdce3281ac849ba85a5cdc90"
+    },
+    {
+      "path": "frontend/src/services/userService.ts",
+      "git_blob": "9b0f2244afcfd6b174d4facd5b3b694f37c5a8dd",
+      "sha256": "c7243139c5bf0ebe3b45c19fedd06f4cbafd70f7d8efae4f5b64b761db59f6f7"
+    },
+    {
+      "path": "frontend/src/vite-env.d.ts",
+      "git_blob": "11f02fe2a0061d6e6e1f271b21da95423b448b32",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "frontend/vite.config.ts",
+      "git_blob": "2afbc9688eeb4633948c55e2b626969d42e3e8ba",
+      "sha256": "7186e4210b6469f4a19e4fdf4692549a6676b33c6214ed78a8953f400c77df41"
+    },
+    {
+      "path": "scripts/browser_harness.cjs",
+      "git_blob": "c878f7bc578587951d67489a998b40afeef1106b",
+      "sha256": "4b95a916d651de5570428e2e574d7119db6662f23d92beee6f3a36460da2875e"
+    },
+    {
+      "path": "scripts/capture_demo_browser.cjs",
+      "git_blob": "fd3fe17c7f2bad5ac978176f865ba44467e68a62",
+      "sha256": "865f079eb71cb3128dfd767a5a1c647799c7bdad4d6ebe2dc02e3827d79aa0c3"
+    }
+  ],
+  "media": [
+    {
+      "path": "docs/demo/trading-website-demo.gif",
+      "bytes": 1931367,
+      "sha256": "6278316a6d2fa9f88498260f99809df469b4a7015571bee4491e9655e6200e0e",
+      "git_blob": "14aea9d0249f1f15e9483ff84831ad8e97d8b630",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "gif",
+            "width": 800,
+            "height": 450,
+            "nb_frames": "66"
+          }
+        ],
+        "format": {
+          "duration": "11.000000"
+        }
+      }
+    },
+    {
+      "path": "docs/demo/trading-website-demo.mp4",
+      "bytes": 522546,
+      "sha256": "1b63f5225262e7689dcc73469d760be7cfd797b89f242c23ce2586baa233b3b1",
+      "git_blob": "3a742afb99d2e23dbba4525130b98620f0ec501f",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 720,
+            "nb_frames": "276"
+          }
+        ],
+        "format": {
+          "duration": "11.040000"
+        }
+      }
+    },
+    {
+      "path": "docs/demo/trading-website-demo-poster.png",
+      "bytes": 134812,
+      "sha256": "4800977bbbc10a97a91311b546e99b633c817ccb06d5e5c5d40ae744971b99fd",
+      "git_blob": "2489a1db7e673d9e1df7cb81e43284394ae1071f",
+      "probe": {
+        "programs": [],
+        "streams": [
+          {
+            "codec_name": "png",
+            "width": 1280,
+            "height": 720
+          }
+        ],
+        "format": {}
+      }
+    }
+  ]
+}

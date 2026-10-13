@@ -59,7 +59,7 @@ try {
   console.log('✅ Advanced Trading Addon loaded successfully');
   console.log('Available functions:', Object.keys(advancedTradingAddon));
 } catch (error) {
-  console.warn('⚠️  Advanced Trading Addon not available, using mock data:', error);
+  console.warn('⚠️  Advanced Trading Addon not available; provider-free fixture mode remains available');
 }
 
 // Configure multer for CSV uploads
@@ -536,11 +536,62 @@ router.get('/run', async (req, res, next) => {
     }
 
     const initialCash = Number(cash)
+    if (!Number.isFinite(initialCash) || initialCash <= 0) {
+      res.status(400).json({ error: 'Cash must be a finite positive number' })
+      return
+    }
+
+    const fixtureData = MOCK_HISTORICAL_DATA[dataset]
+    if (!fixtureData || fixtureData.length < 2) {
+      res.status(400).json({ error: `Dataset '${dataset}' is not available as a checked-in fixture` })
+      return
+    }
 
     let result: StrategyResult;
+    let executionMode: 'native-addon' | 'fictional-fixture'
+    let resultSource: string
+    let executionStatus: 'completed' | 'no-trade-insufficient-cash' = 'completed'
+    let filledQuantity: number | null = null
 
-    // Use the advanced trading addon if available
-    if (advancedTradingAddon && advancedTradingAddon.runAdvancedBacktest) {
+    // The fixture path deliberately ignores the optional native addon so the
+    // published educational receipt is identical on every machine.
+    if (strategy === 'FIXTURE_BUY_HOLD') {
+      const ordered = [...fixtureData].sort((a, b) => a.date.localeCompare(b.date))
+      const entry = Number(ordered[0].close)
+      const exit = Number(ordered[ordered.length - 1].close)
+      const commissionRate = 0.001
+      const entryCostPerUnit = entry * (1 + commissionRate)
+      // Keep the exact one-unit boundary stable despite binary floating-point
+      // representation without accepting a materially underfunded order.
+      const quantity = Math.floor((initialCash / entryCostPerUnit) + 1e-12)
+      const entryCommission = quantity * entry * commissionRate
+      const exitCommission = quantity * exit * commissionRate
+      const realizedPnl = quantity * (exit - entry)
+      const finalEquity = initialCash + realizedPnl - entryCommission - exitCommission
+
+      let runningPeak = initialCash
+      let maxDrawdown = 0
+      for (const row of ordered) {
+        const close = Number(row.close)
+        const liquidationEquity = initialCash + quantity * (close - entry) - entryCommission - quantity * close * commissionRate
+        runningPeak = Math.max(runningPeak, liquidationEquity)
+        maxDrawdown = Math.max(maxDrawdown, ((runningPeak - liquidationEquity) / runningPeak) * 100)
+      }
+
+      executionStatus = quantity > 0 ? 'completed' : 'no-trade-insufficient-cash'
+      filledQuantity = quantity
+
+      result = {
+        total_return_pct: ((finalEquity - initialCash) / initialCash) * 100,
+        max_drawdown_pct: maxDrawdown,
+        realized_pnl: realizedPnl,
+        total_commission: entryCommission + exitCommission,
+        num_fills: quantity > 0 ? 2 : 0,
+        final_equity: finalEquity,
+      }
+      executionMode = 'fictional-fixture'
+      resultSource = 'checked-in fictional OHLCV fixture'
+    } else if (advancedTradingAddon && advancedTradingAddon.runAdvancedBacktest) {
       try {
         console.log(`🚀 Running advanced backtest: ${strategy} on ${dataset} with $${initialCash}`);
         const advancedResult = advancedTradingAddon.runAdvancedBacktest(dataset, strategy, initialCash);
@@ -563,27 +614,18 @@ router.get('/run', async (req, res, next) => {
         });
       } catch (error) {
         console.error('❌ Advanced backtest failed:', error);
-        // Fallback to mock data
-        result = {
-          total_return_pct: 12.34,
-          max_drawdown_pct: 3.21,
-          realized_pnl: initialCash * 0.1234,
-          total_commission: initialCash * 0.001,
-          num_fills: 42,
-          final_equity: initialCash + initialCash * 0.1234 - initialCash * 0.001,
-        };
+        res.status(502).json({
+          error: `Native strategy '${strategy}' failed; no synthetic result was substituted.`
+        })
+        return
       }
+      executionMode = 'native-addon'
+      resultSource = 'native addon'
     } else {
-      // Fallback to mock data if addon is not available
-      console.log('⚠️  Using mock backtest data');
-      result = {
-        total_return_pct: 12.34,
-        max_drawdown_pct: 3.21,
-        realized_pnl: initialCash * 0.1234,
-        total_commission: initialCash * 0.001,
-        num_fills: 42,
-        final_equity: initialCash + initialCash * 0.1234 - initialCash * 0.001,
-      };
+      res.status(503).json({
+        error: `Native strategy '${strategy}' is unavailable. Select FIXTURE_BUY_HOLD for the provider-free checked-in replay.`
+      })
+      return
     }
 
     res.json([
@@ -594,7 +636,12 @@ router.get('/run', async (req, res, next) => {
         realized_pnl: result.realized_pnl,
         commission: result.total_commission,
         fills: result.num_fills,
+        quantity: filledQuantity,
         final_equity: result.final_equity,
+        execution_status: executionStatus,
+        mode: executionMode,
+        data_points: fixtureData.length,
+        source: resultSource,
       },
     ])
   } catch (err) {
